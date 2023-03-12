@@ -1,2 +1,2 @@
 #!/bin/bash
-rm *~
+find . -type -name "*.c~" -exec rm -f {} \;
