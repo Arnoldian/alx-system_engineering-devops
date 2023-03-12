@@ -1,1 +1,2 @@
 #!/bin/bash
+cp --update --path ./*.html ./../*.html
