@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# prints numbers from 1 to 20 w/ diffs in 4th 9nth and 17nth
+
+count=1
+
+while [ $count -le 20 ]
+do
+  echo "$count"
+  case $count in
+    "4") echo "bad luck from China";;
+    "9") echo "bad luck from Japan";;
+    "17") echo "bad luck from Italy";;
+  esac
+  (( count++ ))
+done
