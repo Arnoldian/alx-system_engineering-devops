@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-# Making server work with ff lines
-cp /etc/passwd /tmp/
-echo OK > /tmp/isworking
+#Run Apache on Docker container
+echo "ServerName localhost" >> /etc/apache2.conf
+service apache2 start
