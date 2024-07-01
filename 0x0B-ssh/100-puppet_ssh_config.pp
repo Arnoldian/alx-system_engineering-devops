@@ -1,15 +1,19 @@
-# ssh config configuration
-include stdlib
+# configure ssh for priv key no passw
 
-file_line { 'Turn off passwd auth':
-  path  => '~/.ssh/config',
-  line  => 'PasswordAuthentication no',
-  match => '^PasswordAuthentication',
+# Ensure SSH client config file exists
+file { '/etc/ssh/ssh_config':
+  ensure => present,
 }
 
+# Configure SSH to use private key ~/.ssh/school
 file_line { 'Declare identity file':
-  path  => '~/.ssh/config',
-  line  => 'IdentityFile ~/.ssh/school',
-  match => '^IdentityFile',
+  path => '/etc/ssh/ssh_config',
+  line => '    IdentityFile ~/.ssh/school',
+}
+
+# Configure SSH to refuse password authentication
+file_line { 'Turn off passwd auth':
+  path => '/etc/ssh/ssh_config',
+  line => '    PasswordAuthentication no',
 }
 
