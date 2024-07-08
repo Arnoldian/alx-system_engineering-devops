@@ -1,0 +1,23 @@
+!/usr/bin/env bash
+# Installs HAProxy version w following configs
+# Enables management via init script
+# Distributes requests using round-robin algorithm
+
+apt-get update
+apt-get install -y haproxy
+
+printf %s "
+frontend hbnb-lb_front
+        bind *:80
+        mode http
+        default_backend hbnb-lb_back
+backend hbnb-lb_back
+        balance roundrobin
+        server 344078-web-01 54.236.27.163:80 check
+        server 344078-web-02 54.174.243.27:80 check
+" >> /etc/haproxy/haproxy.cfg
+
+echo "ENABLED=1" >> /etc/default/haproxy
+
+service haproxy start
+
