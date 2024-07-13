@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # shellcheck disable=SC2086
 # Script receives subdomain and domain, returns info of subdomain
 
