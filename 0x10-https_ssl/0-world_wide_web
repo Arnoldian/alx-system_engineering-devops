@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2086
 # script prints domains and subdomains
 
 print_domain_subdomain () {
