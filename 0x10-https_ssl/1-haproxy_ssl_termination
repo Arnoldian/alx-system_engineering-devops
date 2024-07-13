@@ -41,7 +41,7 @@ frontend arnoldian_front
         default_backend arnoldian_back
 
 frontend arnoldian_front_https
-	bind *:443 ssl crt /etc/haproxy/certs/arnoldian.tech.pem
+	bind *:443 ssl crt /etc/haproxy/certs/www.arnoldian.tech.pem
 	http-request set-header X-Forwarded-Proto https
 	default_backend arnoldian_back
 
@@ -49,4 +49,4 @@ backend arnoldian_back
         balance roundrobin
         server 344078-web-01 54.236.27.163:80 check
         server 344078-web-02 54.174.243.27:80 check
-`
+
