@@ -1,34 +1,8 @@
 #!/usr/bin/env bash
-# Ensure Nginx is installed, running, and listening on port 80 of all active IPv4 IPs
+# nginx ran and listening on port 80 of all server's active IPv4 IPs
 
-# Check if Nginx is installed
-if ! command -v nginx &> /dev/null; then
-    echo "Nginx is not installed. Installing..."
-    apt-get update
-    apt-get install -y nginx
-fi
-
-# Backup the original configuration
-cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.bak
-
-# Modify the Nginx configuration
-sed -i 's/listen\s*80;/listen 80 default_server;/g' /etc/nginx/sites-available/default
-sed -i 's/listen\s*\[::\]:80/listen [::]:80 default_server/g' /etc/nginx/sites-available/default
-
-# Ensure the default site is enabled
-ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
-
-# Test Nginx configuration
-nginx -t
-
-# Restart Nginx
-systemctl restart nginx
-
-# Verify Nginx is running and listening on port 80
-if pgrep nginx > /dev/null && netstat -tuln | grep :80 > /dev/null; then
-    echo "Nginx is running and listening on port 80"
-else
-    echo "Failed to configure Nginx"
-    exit 1
-fi
+cd /etc/nginx/sites-enabled/ || exit;
+rm default;
+ln -s /etc/nginx/sites-available/default default;
+service nginx restart
 
