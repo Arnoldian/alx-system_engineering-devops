@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Fixes a web server to run Nginx as the nginx user listening on port 8080.
+
+## Update Nginx configuration file
+CONFIG_FILE="/etc/nginx/nginx.conf"
+sed -i "s/#user www-data/user nginx/" "$CONFIG_FILE"
+sed -i "s/80/8080/g" /etc/nginx/sites-available/default
+chmod 644 "$CONFIG_FILE"
+
+## Stop Apache2 and start Nginx
+APACHE_PROCESS=$(pgrep apache2)
+if [ -n "$APACHE_PROCESS" ]; then
+    sudo kill "$APACHE_PROCESS"
+fi
+
+sudo -u nginx nginx -s reload
+

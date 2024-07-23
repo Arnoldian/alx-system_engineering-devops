@@ -1,3 +1,11 @@
 #!/usr/bin/env bash
+# Script runs whoami as user in arg
+
+# check if arg given
+if [ $# -eq 0 ]; then
+	echo "Please provide a username as an argument."
+	exit 1
+fi
+
 # bash script runs whoami command as another user
 sudo -u "$1" whoami

@@ -1,18 +1,24 @@
 #!/usr/bin/env bash
+# Script sets Nginx to run as nginx user, listening on port 8080
 
-# Fixes a web server to run Nginx as the nginx user listening on port 8080.
-
-## Update Nginx configuration file
-CONFIG_FILE="/etc/nginx/nginx.conf"
-sed -i "s/#user www-data/user nginx/" "$CONFIG_FILE"
-sed -i "s/80/8080/g" /etc/nginx/sites-available/default
-chmod 644 "$CONFIG_FILE"
-
-## Stop Apache2 and start Nginx
-APACHE_PROCESS=$(pgrep apache2)
-if [ -n "$APACHE_PROCESS" ]; then
-    sudo kill "$APACHE_PROCESS"
+# nginx user exists, or add it
+if ! id "nginx" &>/dev/null; then
+    adduser --system --no-create-home --disabled-login --disabled-password --group nginx
 fi
 
-sudo -u nginx nginx -s reload
+# nginx configuration update
+sed -i 's/user www-data;/user nginx;/' /etc/nginx/nginx.conf
+sed -i 's/listen 80;/listen 8080;/' /etc/nginx/sites-available/default
+sed -i 's/listen \[::\]:80;/listen \[::\]:8080;/' /etc/nginx/sites-available/default
 
+# ensuring nginx can bind to port 8080
+if command -v setcap > /dev/null; then
+    setcap 'cap_net_bind_service=+ep' /usr/sbin/nginx
+fi
+
+# nginx directories ownership update
+chown -R nginx:nginx /var/log/nginx
+chown -R nginx:nginx /var/lib/nginx
+
+# service restart
+service nginx restart
