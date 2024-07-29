@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
 """
-Script to fetch and display TODO list progress for a given employee ID
-using a REST API.
+Module fetches and shows TODO list progress for given employee ID
+using REST API.
 """
 
 import requests
@@ -10,7 +10,7 @@ import sys
 
 def get_employee_todo_progress(employee_id):
     """
-    Fetch and display TODO list progress for the given employee ID.
+    Method fetches and shows TODO list progress for given employee ID.
     """
     base_url = "https://jsonplaceholder.typicode.com"
     user_url = f"{base_url}/users/{employee_id}"

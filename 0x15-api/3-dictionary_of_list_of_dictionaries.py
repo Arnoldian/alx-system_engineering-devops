@@ -1,10 +1,14 @@
 #!/usr/bin/python3
+"""
+Module records all tasks from all employees
+"""
 
 import json
 import requests
 
+
 def fetch_data():
-    # Fetch user data
+    """Method fetches user data"""
     users_response = requests.get("https://jsonplaceholder.typicode.com/users")
     users = users_response.json()
 
@@ -30,6 +34,7 @@ def fetch_data():
     return data
 
 def export_to_json(data, filename="todo_all_employees.json"):
+    """Method exports json"""
     with open(filename, 'w') as json_file:
         json.dump(data, json_file, indent=4)
 

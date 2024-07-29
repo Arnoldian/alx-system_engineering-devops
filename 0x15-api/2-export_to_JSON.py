@@ -1,11 +1,15 @@
 #!/usr/bin/python3
+"""
+Module records tasks owned by specific employee
+"""
 
 import json
 import requests
 import sys
 
+
 def export_to_json(user_id):
-    # Define the base URL for the API
+    """Method defines base URL for API"""
     base_url = 'https://jsonplaceholder.typicode.com/'
     
     # Fetch user information
