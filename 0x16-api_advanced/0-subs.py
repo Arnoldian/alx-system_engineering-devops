@@ -1,19 +1,25 @@
 #!/usr/bin/python3
 """
-Module with method
+Module using method
 """
 
 import requests
 
 
 def number_of_subscribers(subreddit):
-    """Method for number of subscribers for specific subreddit"""
-    if subreddit is None or type(subreddit) is not str:
+    """Method for subs no."""
+    headers = {"User-Agent": "0x16. API_advanced-e_kiminza"}
+    url = f"https://www.reddit.com/r/{subreddit}/about.json"
+    
+    # request to Reddit API
+    response = requests.get(url, headers=headers, allow_redirects=False)
+    
+    # subreddit valid or not
+    if response.status_code != 200:
         return 0
+    
+    # Parse JSON response, get number of subs
+    sub = response.json().get("data", {}).get("subscribers", 0)
 
-    r = requests.get('http://www.reddit.com/r/{}/about.json'.format(subreddit),
-                     headers={'User-Agent': '0x16-api_advanced:project:\
-v1.0.0 (by /u/firdaus_cartoon_jr)'}).json()
-    subs = r.get("data", {}).get("subscribers", 0)
+    return sub
 
-    return subs

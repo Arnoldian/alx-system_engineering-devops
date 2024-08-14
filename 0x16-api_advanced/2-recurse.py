@@ -1,33 +1,34 @@
 #!/usr/bin/python3
 """
-Module with method
+Module using method
 """
+
 import requests
 
 
-def recurse(subreddit, hot_list=[], after="", count=0):
-    """Method for titles of hot posts"""
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
-    headers = {
-        "User-Agent": "0x16-api_advanced:project:\
-v1.0.0 (by /u/firdaus_cartoon_jr)"
-    }
-    params = {
-        "after": after,
-        "count": count,
-        "limit": 100
-    }
-    rspns = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
-    if rspns.status_code == 404:
+def recurse(subreddit, hot_list=[], after=None):
+    """Method returning hot list"""
+
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
+    headers = {'User-Agent': 'Mozilla/5.0'}
+    params = {'after': after}
+
+    response = requests.get(url, headers=headers, params=params)
+
+    if response.status_code == 404:
         return None
 
-    res = rspns.json().get("data")
-    after = res.get("after")
-    count += res.get("dist")
-    for c in res.get("children"):
-        hot_list.append(c.get("data").get("title"))
+    data = response.json()
 
-    if after is not None:
-        return recurse(subreddit, hot_list, after, count)
+    if 'data' not in data or len(data['data']['children']) == 0:
+        return hot_list if hot_list else None
+
+    for post in data['data']['children']:
+        hot_list.append(post['data']['title'])
+
+    after = data['data']['after']
+    if after:
+        return recurse(subreddit, hot_list, after)
+
     return hot_list
+

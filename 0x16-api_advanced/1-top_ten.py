@@ -2,28 +2,28 @@
 """
 Module with method
 """
+
 import requests
 
 
 def top_ten(subreddit):
-    """Method prints titles of best 10"""
-    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    """Method for top ten subreddits"""
+    # API endpoint URL
+    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=10"
+    
+    headers = {'User-Agent': 'my-app/0.0.1'}
+    
+    # GET request to API
+    response = requests.get(url, headers=headers)
+    
+    # request, success or not
+    if response.status_code == 200:
+        data = response.json()
+        
+        titles = [post['data']['title'] for post in data['data']['children']]
+        
+        for title in titles:
+            print(title)
+    else:
+        print(None)
 
-    headers = {
-        "User-Agent": "0x16-api_advanced:project:\
-v1.0.0 (by /u/firdaus_cartoon_jr)"
-    }
-
-    params = {
-        "limit": 10
-    }
-
-    response = requests.get(url, headers=headers, params=params,
-                            allow_redirects=False)
-
-    if response.status_code == 404:
-        print("None")
-        return
-
-    results = response.json().get("data")
-    [print(c.get("data").get("title")) for c in results.get("children")]
