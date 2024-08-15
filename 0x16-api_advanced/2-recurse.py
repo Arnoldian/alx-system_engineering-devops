@@ -6,29 +6,28 @@ Module using method
 import requests
 
 
-def recurse(subreddit, hot_list=[], after=None):
-    """Method returning hot list"""
-
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {'User-Agent': 'Mozilla/5.0'}
-    params = {'after': after}
-
-    response = requests.get(url, headers=headers, params=params)
-
+def recurse(subreddit, hot_list=[], after="", count=0):
+    """Method returning list of titles of hot posts on specific subreddit."""
+    url = "https://www.reddit.com/r/{}/hot/.json".format(subreddit)
+    headers = {
+        "User-Agent": "linux:0x16.api.advanced:v1.0.0 (by /u/bdov_)"
+    }
+    params = {
+        "after": after,
+        "count": count,
+        "limit": 100
+    }
+    response = requests.get(url, headers=headers, params=params,
+                            allow_redirects=False)
     if response.status_code == 404:
         return None
 
-    data = response.json()
+    results = response.json().get("data")
+    after = results.get("after")
+    count += results.get("dist")
+    for c in results.get("children"):
+        hot_list.append(c.get("data").get("title"))
 
-    if 'data' not in data or len(data['data']['children']) == 0:
-        return hot_list if hot_list else None
-
-    for post in data['data']['children']:
-        hot_list.append(post['data']['title'])
-
-    after = data['data']['after']
-    if after:
-        return recurse(subreddit, hot_list, after)
-
+    if after is not None:
+        return recurse(subreddit, hot_list, after, count)
     return hot_list
-
